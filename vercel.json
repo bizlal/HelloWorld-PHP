@@ -3,13 +3,15 @@
   "builds": [
     { "src": "index.php", "use": "vercel-php@0.6.0" },
     { "src": "callback.php", "use": "vercel-php@0.6.0" },
-    { "src": "refreshToken.php", "use": "vercel-php@0.6.0" }
-  
+    { "src": "refreshToken.php", "use": "vercel-php@0.6.0" },
+    { "src": "apiCall.php", "use": "vercel-php@0.6.0" },
+    { "src": "config.php", "use": "vercel-php@0.6.0" }
   ],
   "routes": [
     { "src": "/", "dest": "index.php" },
     { "src": "/callback", "dest": "callback.php" },
-    { "src": "/refreshToken", "dest": "refreshToken.php" }
-
+    { "src": "/refreshToken", "dest": "refreshToken.php" },
+    { "src": "/apiCall", "dest": "apiCall.php" },
+    { "src": "/config", "dest": "config.php" }
   ]
 }
