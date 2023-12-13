@@ -7,9 +7,10 @@ session_start();
 
 function processCode()
 {
-
+    echo "Starting OAuth process...<br>";
     // Create SDK instance
     $config = include('config.php');
+    echo "Config loaded...<br>";
     $dataService = DataService::Configure(array(
         'auth_mode' => 'oauth2',
         'ClientID' => $config['client_id'],
@@ -19,30 +20,36 @@ function processCode()
         'baseUrl' => "development"
     ));
 
+    echo "DataService configured...<br>";
     $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
-    $parseUrl = parseAuthRedirectUrl(htmlspecialchars_decode($_SERVER['QUERY_STRING']));
+    echo "OAuth2LoginHelper obtained...<br>";
+    $parseUrl = parseAuthRedirectUrl($_SERVER['QUERY_STRING']);
+    echo "Parsed URL: " . print_r($parseUrl, true) . "<br>";
 
-    /*
-     * Update the OAuth2Token
-     */
-    $accessToken = $OAuth2LoginHelper->exchangeAuthorizationCodeForToken($parseUrl['code'], $parseUrl['realmId']);
-    $dataService->updateOAuth2Token($accessToken);
+    try {
+        $accessToken = $OAuth2LoginHelper->exchangeAuthorizationCodeForToken($parseUrl['code'], $parseUrl['realmId']);
+        echo "Access token obtained...<br>";
+        $dataService->updateOAuth2Token($accessToken);
+        echo "OAuth2 token updated in DataService...<br>";
 
-    /*
-     * Setting the accessToken for session variable
-     */
-    $_SESSION['sessionAccessToken'] = $accessToken;
+        $_SESSION['sessionAccessToken'] = $accessToken;
+        echo "Access token stored in session...<br>";
+        // Redirect to a different page or show a success message
+    } catch (Exception $e) {
+        // Handle error
+        echo "Error during token exchange: " . $e->getMessage() . "<br>";
+    }
 }
 
 function parseAuthRedirectUrl($url)
 {
-    parse_str($url,$qsArray);
+    parse_str($url, $qsArray);
     return array(
-        'code' => $qsArray['code'],
-        'realmId' => $qsArray['realmId']
+        'code' => $qsArray['code'] ?? null,
+        'realmId' => $qsArray['realmId'] ?? null
     );
 }
 
-$result = processCode();
+processCode();
 
 ?>
