@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "index.php", "use": "vercel-php@0.6.0" },
+    { "src": "callback.php", "use": "vercel-php@0.6.0" },
+    { "src": "refreshToken.php", "use": "vercel-php@0.6.0" }
+  
+  ],
+  "routes": [
+    { "src": "/", "dest": "index.php" },
+    { "src": "/callback", "dest": "callback.php" },
+    { "src": "/refreshToken", "dest": "refreshToken.php" }
+
+  ]
+}
