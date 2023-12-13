@@ -7,7 +7,6 @@ session_start();
 
 function makeAPICall()
 {
-
     // Create SDK instance
     $config = include('config.php');
     $dataService = DataService::Configure(array(
@@ -19,19 +18,27 @@ function makeAPICall()
         'baseUrl' => "development"
     ));
 
-    /*
-     * Retrieve the accessToken value from session variable
-     */
+    // Retrieve the accessToken value from session variable
     $accessToken = $_SESSION['sessionAccessToken'];
 
-    /*
-     * Update the OAuth2Token of the dataService object
-     */
+    // Update the OAuth2Token of the dataService object
     $dataService->updateOAuth2Token($accessToken);
-    $companyInfo = $dataService->getCompanyInfo();
-    $address = "QBO API call Successful!! Response Company name: " . $companyInfo->CompanyName . " Company Address: " . $companyInfo->CompanyAddr->Line1 . " " . $companyInfo->CompanyAddr->City . " " . $companyInfo->CompanyAddr->PostalCode;
-    print_r($address);
-    return $companyInfo;
+
+    // Query for Customer data
+    $customerInfo = $dataService->Query("SELECT * FROM Customer");
+
+    // Display relevant customer info
+    foreach ($customerInfo as $customer) {
+        print_r("Customer ID: " . $customer->Id . "\n");
+        print_r("Customer Name: " . $customer->DisplayName . "\n");
+        print_r("Customer Email: " . $customer->PrimaryEmailAddr->Address . "\n");
+        print_r("Phone Number: " . $customer->PrimaryPhone->FreeFormNumber . "\n");
+        print_r("Billing Address: " . $customer->BillAddr->Line1 . ", " . $customer->BillAddr->City . ", " . $customer->BillAddr->PostalCode . "\n");
+        print_r("Balance: " . $customer->Balance . "\n");
+        print_r("------------------------------------------------\n");
+    }
+
+    return $customerInfo;
 }
 
 $result = makeAPICall();
