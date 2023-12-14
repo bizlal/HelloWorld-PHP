@@ -34,6 +34,7 @@ function processCode()
 
         $_SESSION['sessionAccessToken'] = $accessToken;
         echo "Access token stored in session...<br>";
+        echo "Access Token: " . print_r($accessToken, true) . "<br>";
         // Redirect to a different page or show a success message
     } catch (Exception $e) {
         // Handle error
